@@ -10,8 +10,10 @@
 #import "OneViewController.h"
 #import "TwoViewController.h"
 #import "ThreeViewController.h"
+#import "UIImage+Color.h"
 //
 
+#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 #define COLOR(r, g, b, a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:a]
 @interface ViewController (){
      NSMutableDictionary *listDic;
@@ -55,24 +57,33 @@
     
     listDic = [NSMutableDictionary dictionary];
     
-    NSArray * _titles = @[@"申请", @"待办",@"测试"];
+    NSArray * _titles = @[@"消息", @"好友"];
     UISegmentedControl * _segmentedControl = [[UISegmentedControl alloc] initWithItems:_titles];
     _segmentedControl.selectedSegmentIndex = 0;
-    _segmentedControl.tintColor = COLOR(183, 222, 232, 1.0);
+    [_segmentedControl setBackgroundImage:[UIImage imageWithColor:[UIColor blackColor]] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+    [_segmentedControl setBackgroundImage:[UIImage imageWithColor:[UIColor blackColor]] forState:UIControlStateSelected barMetrics:UIBarMetricsDefault];
+    [_segmentedControl setDividerImage:[UIImage imageWithColor:[UIColor whiteColor]] forLeftSegmentState:UIControlStateNormal rightSegmentState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+    [_segmentedControl setDividerImage:[UIImage imageWithColor:[UIColor whiteColor]] forLeftSegmentState:UIControlStateSelected rightSegmentState:UIControlStateSelected barMetrics:UIBarMetricsDefault];
+    _segmentedControl.layer.masksToBounds = YES;               //    默认为no，不设置则下面一句无效
+    
+    _segmentedControl.layer.cornerRadius = 5;               //    设置圆角大小，同UIView
+    
+    _segmentedControl.layer.borderWidth = 1;
+    _segmentedControl.layer.borderColor = [UIColor whiteColor].CGColor;
     
     //修改字体的默认颜色与选中颜色
     //选择后的字体颜色（在NSDictionary中 可以添加背景颜色和字体的背景颜色）
-    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor blackColor],
+    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor orangeColor],
                          NSForegroundColorAttributeName,
-                         [UIFont systemFontOfSize:12],
+                         [UIFont systemFontOfSize:16],
                          NSFontAttributeName,nil];
     
     [ _segmentedControl setTitleTextAttributes:dic forState:UIControlStateSelected];
     
     //默认字体颜色
-    NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:COLOR(183, 222, 232, 1.0),
+    NSDictionary *dic1 = [NSDictionary dictionaryWithObjectsAndKeys:UIColorFromRGB(0xffffff),
                           NSForegroundColorAttributeName,
-                          [UIFont systemFontOfSize:12],
+                          [UIFont systemFontOfSize:16],
                           NSFontAttributeName,nil];
     
     [ _segmentedControl setTitleTextAttributes:dic1 forState:UIControlStateNormal];
@@ -81,7 +92,7 @@
     
     _segmentedControl.frame = CGRectMake(100, 20, 200.0, 29.0);
     [self.view addSubview:_segmentedControl];
-    self.view.backgroundColor = [UIColor grayColor];
+    self.view.backgroundColor = [UIColor blackColor];
     
     //将默认的页面添加进去
     [self addChildViewController:self.oneVC];
